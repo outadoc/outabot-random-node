@@ -1,3 +1,7 @@
+/* outa[bot] // app.js
+   Copyright (c) 2012-2013 outa[dev].
+*/
+
 (function() {
 	
 	var randomTweet = require("./MyNextTweet.js"),	//the module that will get us a random funny tweet

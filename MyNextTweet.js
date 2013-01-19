@@ -1,5 +1,5 @@
 /* My Next Tweet. Copyright (C) 2011 Monokai. 
-   NodeJS port (C) 2012 outa[dev].
+   NodeJS port (C) 2012-2013 outa[dev].
 */
 
 (function() {	
