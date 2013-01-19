@@ -38,17 +38,20 @@
 						);
 						
 						randomTweet.getNewTweet(realDudeUsername, twitterAPI, 
-							function(tweet) {
-								var tweetDone = '@' + data.user.screen_name + " " + tweet;
-
-								logtrace("got random tweet");
-								
-								twitterAPI.updateStatus(tweetDone.substring(0, 140), { in_reply_to_status_id: data.id_str },
-									function(error, statusData) {
-										if (error) logtrace(error);
-										logtrace("replied to " + statusData.in_reply_to_screen_name);
-									}
-								);
+							function(error, tweet) {
+								if (error) {
+									logtrace(error);
+								} else {
+									logtrace("got random tweet");
+									var tweetDone = '@' + data.user.screen_name + " " + tweet;
+									
+									twitterAPI.updateStatus(tweetDone.substring(0, 140), { in_reply_to_status_id: data.id_str },
+										function(error, statusData) {
+											if (error) logtrace(error);
+											logtrace("replied to " + statusData.in_reply_to_screen_name);
+										}
+									);
+								}
 							}
 						);
 					}

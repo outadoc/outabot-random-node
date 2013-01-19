@@ -30,15 +30,11 @@
         return a = a.replace(/[\u2018\u2019\u201c\u201d\u2018\u2019"\u201c\u201d\u2039\u203a\u00ab\u00bb\[\]\(\)]/, "");
     }
     
-    function log(a) {
-        console.log("[MyNextTweet] " + a);
-    }
-    
     function getRandomTweet() {
         var a;
         var b = k[Math.floor(Math.random() * k.length)];
         
-        if (b == undefined) a = "error, b undefined";
+        if (b == undefined) exports.callback("getRandomTweet(): error, b undefined", null);
         else {
             for (a = b + " ";;) {
                 b: {
@@ -76,7 +72,7 @@
                 a = a;
             }
         }
-       	exports.callback(a);
+       	exports.callback(null, a);
     }
     
     var s = 106,
@@ -102,12 +98,12 @@
                 });
 
             } catch (e) {
-                log("error getting tweets: " + e);
+                callback("getNewTweet(): error getting tweets w/ api", null);
             }
         },
         
         onTwitterStatusesLoaded: function (tweets) {
-            if (!tweets || tweets.length === 0) log("error, tweets undefined");
+            if (!tweets || tweets.length === 0) exports.callback("onTwitterStatusesLoaded(): error, tweets undefined");
             else {
                 for (var b, c = {}, g = 0; g < tweets.length; g++) {
                     var e;
