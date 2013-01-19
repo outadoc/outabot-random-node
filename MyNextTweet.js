@@ -93,7 +93,7 @@
                 i = {};
                 k = [];
                 
-                twitterObj.get('/statuses/user_timeline.json', {screen_name: urlEncode(user), count: 200}, function(error, data) {
+                twitterObj.get('/statuses/user_timeline.json', {screen_name: urlEncode(user), count: 80}, function(error, data) {
                     module.exports.onTwitterStatusesLoaded(data);
                 });
 
