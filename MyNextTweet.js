@@ -31,14 +31,14 @@
     }
     
     function log(a) {
-        console.log(a);
+        console.log("[MyNextTweet] " + a);
     }
     
     function getRandomTweet() {
         var a;
         var b = k[Math.floor(Math.random() * k.length)];
         
-        if (b == undefined) a = "error.";
+        if (b == undefined) a = "error, b undefined";
         else {
             for (a = b + " ";;) {
                 b: {
@@ -97,21 +97,21 @@
                 i = {};
                 k = [];
                 
-                twitterObj.get('/statuses/user_timeline.json', {screen_name: urlEncode(user), count: 200}, function(data) {
+                twitterObj.get('/statuses/user_timeline.json', {screen_name: urlEncode(user), count: 200}, function(error, data) {
                     module.exports.onTwitterStatusesLoaded(data);
                 });
 
-            } catch (c) {
-                log("error. " + c);
+            } catch (e) {
+                log("error getting tweets: " + e);
             }
         },
         
-        onTwitterStatusesLoaded: function (a) {
-            if (!a || a.length === 0) log("error.");
+        onTwitterStatusesLoaded: function (tweets) {
+            if (!tweets || tweets.length === 0) log("error, tweets undefined");
             else {
-                for (var b, c = {}, g = 0; g < a.length; g++) {
+                for (var b, c = {}, g = 0; g < tweets.length; g++) {
                     var e;
-                    e = a[g].text.split(/ /);
+                    e = tweets[g].text.split(/ /);
                     
                     for (var h = [], f = 0; f < e.length; f++) {
                         var d = e[f];
@@ -130,17 +130,17 @@
                     }
                 }
                 
-                a = {};
+                tweets = {};
                 var j, m;
                 
                 for (j in c) {
-                    a[j] = {};
+                    tweets[j] = {};
                     b = 0;
                     for (m in c[j]) b += c[j][m];
-                    for (m in c[j]) a[j][m] = c[j][m] / b
+                    for (m in c[j]) tweets[j][m] = c[j][m] / b
                 }
                 
-                i = a;
+                i = tweets;
                 x[user] = k;
                 t[user] = i;
                 

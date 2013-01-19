@@ -3,7 +3,7 @@
 	var http = require("http"),
 		randomTweet = require("./MyNextTweet.js"),
 		util = require('util'),
-		twitter = require('twitter'),
+		twitter = require('ntwitter'),
 	
 		botUsername = "",
 		realDudeUsername = "Kur0igetsu",
@@ -15,41 +15,54 @@
 		access_token_secret: 'ScXUE6Go2MF2BQF4cTOcwrXggXujbIoBhzPtA4VNOQ'
 	});
 	
-	twitterAPI.verifyCredentials(function(userdata) {
+	twitterAPI.verifyCredentials(function(error, userdata) {
 		botUsername = userdata.screen_name;
 		logtrace("logged in as " + userdata.screen_name);
 
-		twitterAPI.stream('user', {with:'followings', track:'@' + botUsername}, function(stream) {
-			logtrace("streaming");
+		twitterAPI.stream('user', { with:'followings', track:'@' + botUsername },
+			function(stream) {
+				logtrace("streaming");
 
-			stream.on('data', function(data) {
-				if(data.text !== undefined && data.user.screen_name.toLowerCase() != botUsername.toLowerCase() && data.text.toLowerCase().indexOf('@' + botUsername.toLowerCase()) != -1 && data.retweeted_status === undefined) {
-					logtrace("mention from " + data.user.screen_name);
+				stream.on('data', function(data) {
+					if(data.text !== undefined 
+						&& data.user.screen_name.toLowerCase() != botUsername.toLowerCase() 
+						&& data.text.toLowerCase().indexOf('@' + botUsername.toLowerCase()) != -1 
+						&& data.retweeted_status === undefined) {
 
-					twitterAPI.retweetStatus(data.id_str, function(rtdata) {
-						logtrace("retweeted " + data.user.screen_name);
-					});
-					
-					randomTweet.getNewTweet(realDudeUsername, twitterAPI, function(tweet) {
-						var tweetDone = '@' + data.user.screen_name + " " + tweet;
+						logtrace("mention from " + data.user.screen_name);
 
-						logtrace("got random tweet");
+						twitterAPI.retweetStatus(data.id_str,
+							function(error, rtdata) {
+								logtrace("retweeted " + data.user.screen_name);
+							}
+						);
 						
-						twitterAPI.updateStatus(tweetDone.substring(0, 140), {in_reply_to_status_id: data.id_str}, function(data) {
-							logtrace("replied to " + data.in_reply_to_screen_name);
-						});
-					});
-				}
-			});
+						randomTweet.getNewTweet(realDudeUsername, twitterAPI, 
+							function(tweet) {
+								var tweetDone = '@' + data.user.screen_name + " " + tweet;
 
-			stream.on('end', function(e) {
-				logtrace("STREAM STOPPED. (" + e + ")");
-			});
-			
-			stream.on('error', function (e, code) {
-				logtrace("STREAM ERROR. (" + e + " " + code + ")");
-			});
-		});
+								logtrace("got random tweet");
+								
+								twitterAPI.updateStatus(tweetDone.substring(0, 140), { in_reply_to_status_id: data.id_str },
+									function(error, statusData) {
+										if (error) logtrace(error);
+										logtrace("replied to " + statusData.in_reply_to_screen_name);
+									}
+								);
+							}
+						);
+					}
+				});
+
+				stream.on('end', function(e) {
+					logtrace("STREAM STOPPED. (" + e + ")");
+				});
+				
+				stream.on('error', function (e, code) {
+					logtrace("STREAM ERROR. (" + e + " " + code + ")");
+				});
+			}
+		);
 	});
 	
 	function logtrace(message) {
