@@ -4,7 +4,7 @@
 
 (function() {
 		//the module that will get us a random funny tweet
-	var randomTweet = require("./MyNextTweet.js"),
+	var randomTweet = require("./lib/MyNextTweet.js"),
 		//the twitter api module
 		twitter = require('ntwitter'),
 		
