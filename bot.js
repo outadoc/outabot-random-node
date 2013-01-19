@@ -8,14 +8,17 @@
 		//the twitter api module
 		twitter = require('ntwitter'),
 		
-		//the username of the bot. not set to begin with
+		//the username of the bot. not set to begin with, we'll get it when authenticating
 		botUsername = null,
 		//the username of the user we will try to mimic
 		realDudeUsername = null,
 		apiParameters = null;
 
+		//the username is passed via a command-line parameter
+		//if we want to mimic kur0igetsu
 		if(process.argv[2] != undefined && process.argv[2].toLowerCase() == "kur0igetsu") {
 
+			//set his api keys
 			apiParameters = {
 				consumer_key: 'vvnprToEpIE9h2TW14YEw',
 				consumer_secret: 'jPcBFPYJugksOiEzuvE7PaCwCKw8tGU0JrqHu1uqkh0',
@@ -23,8 +26,10 @@
 				access_token_secret: 'ScXUE6Go2MF2BQF4cTOcwrXggXujbIoBhzPtA4VNOQ'
 			};
 
+			//remember we want to be him
 			realDudeUsername = process.argv[2];
 
+		//same thing for apcros
 		} else if(process.argv[2] != undefined && process.argv[2].toLowerCase() == "apcros") {
 			
 			apiParameters = {
@@ -37,11 +42,12 @@
 			realDudeUsername = process.argv[2];
 
 		} else {
+			//if there was no parameter or if it wasn't either apcros or kur0igetsu
 			logtrace("you must specify a valid user to mimic as a parameter (kur0igetsu or apcros)");
 			process.exit(1);
 		}
 	
-		//keys for the twitter api (depends on the app and on the user authenticated)
+		//create an object using the keys we just determined
 		twitterAPI = new twitter(apiParameters);
 	
 	//check if we have the rights to do anything
