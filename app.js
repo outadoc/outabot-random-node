@@ -3,22 +3,46 @@
 */
 
 (function() {
-	
-	var randomTweet = require("./MyNextTweet.js"),	//the module that will get us a random funny tweet
-		twitter = require('ntwitter'),				//the twitter api module
+		//the module that will get us a random funny tweet
+	var randomTweet = require("./MyNextTweet.js"),
+		//the twitter api module
+		twitter = require('ntwitter'),
 		
 		//the username of the bot. not set to begin with
-		botUsername = "",
+		botUsername = null,
 		//the username of the user we will try to mimic
-		realDudeUsername = "Kur0igetsu",
+		realDudeUsername = null,
+		apiParameters = null;
+
+		if(process.argv[2] != undefined && process.argv[2].toLowerCase() == "kur0igetsu") {
+
+			apiParameters = {
+				consumer_key: 'vvnprToEpIE9h2TW14YEw',
+				consumer_secret: 'jPcBFPYJugksOiEzuvE7PaCwCKw8tGU0JrqHu1uqkh0',
+				access_token_key: '1048466726-Xqohd9MD7WUo7KE5fx4PJHUAOiTjKc7dFrgXL0D',
+				access_token_secret: 'ScXUE6Go2MF2BQF4cTOcwrXggXujbIoBhzPtA4VNOQ'
+			};
+
+			realDudeUsername = process.argv[2];
+
+		} else if(process.argv[2] != undefined && process.argv[2].toLowerCase() == "apcros") {
+			
+			apiParameters = {
+				consumer_key: 'Qu0FSVorTqon6K0L9IK6Ww',
+				consumer_secret: 'FxDHnJS6hlNE8cirPgFzXYiLtGrZ9x5O99WPnoiIdQ',
+				access_token_key: '1103716136-nhS8irZ6ay7tyidGdLhYKIHWb74NsM2CnhUHKS4',
+				access_token_secret: 'MM45S2y7nSp7ZAr2Be49Ne7C8w5axt468npirvaQ'
+			};
+
+			realDudeUsername = process.argv[2];
+
+		} else {
+			logtrace("you must specify a valid user to mimic as a parameter (kur0igetsu or apcros)");
+			process.exit(1);
+		}
 	
 		//keys for the twitter api (depends on the app and on the user authenticated)
-		twitterAPI = new twitter({
-		consumer_key: 'vvnprToEpIE9h2TW14YEw',
-		consumer_secret: 'jPcBFPYJugksOiEzuvE7PaCwCKw8tGU0JrqHu1uqkh0',
-		access_token_key: '1048466726-Xqohd9MD7WUo7KE5fx4PJHUAOiTjKc7dFrgXL0D',
-		access_token_secret: 'ScXUE6Go2MF2BQF4cTOcwrXggXujbIoBhzPtA4VNOQ'
-	});
+		twitterAPI = new twitter(apiParameters);
 	
 	//check if we have the rights to do anything
 	twitterAPI.verifyCredentials(function(error, userdata) {
