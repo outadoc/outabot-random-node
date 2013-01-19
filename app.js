@@ -75,7 +75,7 @@
 										//if for whatever reason it didn't work, log it, but don't abandon either, we can still try replying to it
 										logtrace(error);
 									} else {
-										logtrace("retweeted " + rtdata.user.screen_name);
+										logtrace("retweeted " + data.user.screen_name);
 									}
 								}
 							);
