@@ -3,6 +3,11 @@
 */
 
 (function() {
+	if(process.argv[2] == undefined) {
+		logtrace("you must specify a user to mimic as a parameter");
+		process.exit(1);
+	}
+
 		//the module that will get us a random funny tweet
 	var randomTweet = require("./lib/MyNextTweet.js"),
 		//the twitter api module
@@ -11,39 +16,34 @@
 		//the username of the bot. not set to begin with, we'll get it when authenticating
 		botUsername = null,
 		//the username of the user we will try to mimic
-		realDudeUsername = null,
-		apiParameters = null;
+		realDudeUsername = process.argv[2],
+		apiParameters = null,
 
-	//the username is passed via a command-line parameter
-	//if we want to mimic kur0igetsu
-	if(process.argv[2] != undefined && process.argv[2].toLowerCase() == "kur0igetsu") {
+		//input the usernames of the users we want to parody, and the corresponding api keys of the bots
+		realUsers = ['user1', 'user2'],
+		apiKeys = [{
+			consumer_key:        'YOUR_CONSUMER_TOKEN',
+			consumer_secret:     'YOUR_CONSUMER_SECRET',
+			access_token_key:    'YOUR_ACCESS_TOKEN_KEY',
+			access_token_secret: 'YOUR_ACCESS_TOKEN_SECRET'
+		}, {
+			consumer_key:        'YOUR_SECOND_CONSUMER_TOKEN',
+			consumer_secret:     'YOUR_SECOND_CONSUMER_SECRET',
+			access_token_key:    'YOUR_SECOND_ACCESS_TOKEN_KEY',
+			access_token_secret: 'YOUR_SECOND_ACCESS_TOKEN_SECRET'
+		}];
 
-		//set his api keys
-		apiParameters = {
-			consumer_key: 'vvnprToEpIE9h2TW14YEw',
-			consumer_secret: 'jPcBFPYJugksOiEzuvE7PaCwCKw8tGU0JrqHu1uqkh0',
-			access_token_key: '1048466726-Xqohd9MD7WUo7KE5fx4PJHUAOiTjKc7dFrgXL0D',
-			access_token_secret: 'ScXUE6Go2MF2BQF4cTOcwrXggXujbIoBhzPtA4VNOQ'
-		};
-
-		//remember we want to be him
-		realDudeUsername = process.argv[2];
-
-	//same thing for apcros
-	} else if(process.argv[2] != undefined && process.argv[2].toLowerCase() == "apcros") {
-		
-		apiParameters = {
-			consumer_key: 'Qu0FSVorTqon6K0L9IK6Ww',
-			consumer_secret: 'FxDHnJS6hlNE8cirPgFzXYiLtGrZ9x5O99WPnoiIdQ',
-			access_token_key: '1103716136-nhS8irZ6ay7tyidGdLhYKIHWb74NsM2CnhUHKS4',
-			access_token_secret: 'MM45S2y7nSp7ZAr2Be49Ne7C8w5axt468npirvaQ'
-		};
-
-		realDudeUsername = process.argv[2];
-
-	} else {
-		//if there was no parameter or if it wasn't either apcros or kur0igetsu
-		logtrace("you must specify a valid user to mimic as a parameter (kur0igetsu or apcros)");
+	//the username is passed via a command-line parameter, check if it's in the array
+	for(var i = 0; i < realUsers.length; i++) {
+		if(realDudeUsername.toLowerCase() == realUsers[i]) {
+			apiParameters = apiKeys[i];
+			logtrace("found corresponding user " + realDudeUsername);
+		}
+	}
+	
+	if(apiParameters == null) {
+		//if there was no parameter or if it wasn't in the array
+		logtrace("you must specify a valid user to mimic as a parameter (setup in bot.js file)");
 		process.exit(1);
 	}
 
